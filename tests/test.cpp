@@ -2,51 +2,28 @@
 
 
 #include <gtest/gtest.h>
-#include <header.hpp>
-#include <type_traits>
+#include "header.hpp"
 
+TEST(stack, Text) {
+stack<int> test;
+int a = 2, b = 3, c = 4;
 
-class Length{
- public:
-  int sum;
-  Length() {}
-  Length(std::string S1, std::string S2){
-    sum = S1.length() + S2.length();
-  }
-  explicit Length(std::string S1){
-    sum = S1.length();
-  }
-};
+test.push(a);
+test.push(b);
+test.push(c);
+test.push(12);
+test.push_emplace(15);
 
-TEST(one, EmptyTest) {
-Stack<int> Stack_1(30);
-int var_1 = 6;
-int var_2 = 8;
-int var_3 = 10;
-Stack_1.push(var_1);
-Stack_1.push(var_2);
-Stack_1.pop();
-Stack_1.push(var_3);
-EXPECT_EQ(static_cast<int>(Stack_1.head()), 10);
-}
-
-
-TEST(two, EmptyTest) {
-Length obj("Malo");
-stack<Length> Stack_2(30);
-Stack_2.push_emplace("Halo", "Dasha");
-Stack_2.push(std::move(obj));
-EXPECT_EQ(Stack_2.pop().sum, 4);
-}
-
-
-TEST(three, EmptyTest) {
-EXPECT_EQ(std::is_move_constructible<Stack<int>>::value, true);
-EXPECT_EQ(std::is_move_assignable<Stack<int>>::value, true);
-EXPECT_EQ(std::is_move_constructible<stack<int>>::value, true);
 EXPECT_EQ(std::is_move_assignable<stack<int>>::value, true);
-}
+EXPECT_EQ(std::is_move_constructible<stack<int>>::value, true);
 
+EXPECT_EQ(test.head(), 15);
+EXPECT_EQ(test.pop(), 15);
+EXPECT_EQ(test.pop(), 12);
+EXPECT_EQ(test.pop(), 4);
+EXPECT_EQ(test.pop(), 3);
+EXPECT_EQ(test.pop(), 2);
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
