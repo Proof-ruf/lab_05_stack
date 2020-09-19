@@ -2,78 +2,86 @@
 
 #ifndef INCLUDE_HEADER_HPP_
 #define INCLUDE_HEADER_HPP_
-#define STACK_UNDERFLOW -2
-
-#include <cstdlib>
 #include <iostream>
-#include <new>
-
-using std::cout;
-using std::endl;
+#include <cstring>
+#include <cstdlib>
+#define ERROR -1
 
 template <typename T>
-class stack
-{
+class Stack{
  private:
-  T *stackPtr;    // указатель на стек
-  int count;      // размер стека (количество элементов в стеке)
+  T *ArrStack;
+  int top;
+  int size;
 
  public:
-  stack() {       // конструктор
-    stackPtr = nullptr;
-    count = 0;
+  explicit Stack(int s) : ArrStack(nullptr){
+    size = s;
+    top = 0;
   }
-
-  ~stack() {       // деструктор
-    delete[] stackPtr;  // удаляем стек
+  ~Stack() {
+    free(ArrStack);
   }
+  void push(T&& value){
+    top++;
+    ArrStack = static_cast<T*>(realloc(ArrStack, top * sizeof(T)));
+    ArrStack[top - 1] = value;
+  }
+  void push(const T& value){
+    top++;
+    ArrStack = static_cast<T*>(realloc(ArrStack, top * sizeof(T)));
+    ArrStack[top - 1] = value;
+  }
+  void pop(){
+    if (top == 0) {
+      exit(ERROR);
+    }
+    --top;
+    ArrStack = static_cast<T*>(realloc(ArrStack, top * sizeof(T)));
+  }
+  const T& head() const{
+    return ArrStack[top-1];
+  }
+};
 
+template <typename T>
+class stack{
+ private:
+  T *ArrStack;
+  int top;
+  int size;
+
+ public:
+  explicit stack(int s) : ArrStack(nullptr){
+    size = s;
+    top = 0;
+  }
+  ~stack(){
+    free(ArrStack);
+  }
   template <typename ... Args>
-  void push_emplace(Args &&... value) {
-    push(std::forward<Args>(value)...);
+  void push_emplace(Args&&... value){
+    T obj(std::forward<Args>(value)...);
+    top++;
+    ArrStack = static_cast<T*>(realloc(ArrStack, top * sizeof(T)));
+    ArrStack[top - 1] = obj;
   }
-
-  void push(T&& value) {
-    T* tmpPtr;             // временный указатель
-    tmpPtr = stackPtr;     // указатель указывает на arrStack
-    stackPtr = new T[count + 1];
-    count++;            // увеличить количество элементов в стеке на 1
-
-    for (int i = 0; i < count - 1; i++) {
-      stackPtr[i] = tmpPtr[i];
+  void push(T&& value){
+    top++;
+    ArrStack = static_cast<T*>(realloc(ArrStack, top * sizeof(T)));
+    ArrStack[top - 1] = value;
+  }
+  const T& head() const{
+    return ArrStack[top-1];
+  }
+  T pop(){
+    if (top == 0) {
+      exit(ERROR);
     }
-    stackPtr[count - 1] = value;    // добавить последний элемент
-
-    if (count > 1) delete[] tmpPtr;    // освободить память, удалить tmp
-  }
-
-  void push(const T& value) {
-    T* tmpPtr;             // временный указатель
-    tmpPtr = stackPtr;     // указатель указывает на arrStack
-    stackPtr = new T[count + 1];
-    count++;
-
-    for (int i = 0; i < count - 1; i++) {
-      stackPtr[i] = tmpPtr[i];
-    }
-    stackPtr[count - 1] = value;    // добавить последний элемент
-
-    if (count > 1) delete[] tmpPtr;    // освободить память, удалить tmp
-  }
-
-  T pop() {
-    if (count == 0)
-      return 0; // стек пуст
-    count--;
-    return stackPtr[count];
-  }
-
-  const T& head() const {
-    if (count == 0) {
-      cout << "stack underflow" << endl;
-      exit(STACK_UNDERFLOW);
-    }
-    return stackPtr[count-1];
+    T rezult = ArrStack[top - 1];
+    --top;
+    ArrStack = static_cast<T*> (realloc(ArrStack, top * sizeof(T)));
+    return rezult;
   }
 };
 
