@@ -15,17 +15,17 @@ template <typename T>
 class stack
 {
  private:
-  T *stackPtr;    // указатель на стек
-  int count;      // размер стека (количество элементов в стеке)
+  T *stackPtr;
+  int count;
 
  public:
-  stack() {       // конструктор
+  stack() {
     stackPtr = nullptr;
     count = 0;
   }
 
-  ~stack() {       // деструктор
-    delete[] stackPtr;  // удаляем стек
+  ~stack() {
+    delete[] stackPtr;
   }
 
   template <typename ... Args>
@@ -34,36 +34,36 @@ class stack
   }
 
   void push(T&& value) {
-    T* tmpPtr;             // временный указатель
-    tmpPtr = stackPtr;     // указатель указывает на arrStack
-    stackPtr = new T[count + 1];
-    count++;            // увеличить количество элементов в стеке на 1
-
-    for (int i = 0; i < count - 1; i++) {
-      stackPtr[i] = tmpPtr[i];
-    }
-    stackPtr[count - 1] = value;    // добавить последний элемент
-
-    if (count > 1) delete[] tmpPtr;    // освободить память, удалить tmp
-  }
-
-  void push(const T& value) {
-    T* tmpPtr;             // временный указатель
-    tmpPtr = stackPtr;     // указатель указывает на arrStack
+    T* tmpPtr;
+    tmpPtr = stackPtr;
     stackPtr = new T[count + 1];
     count++;
 
     for (int i = 0; i < count - 1; i++) {
       stackPtr[i] = tmpPtr[i];
     }
-    stackPtr[count - 1] = value;    // добавить последний элемент
+    stackPtr[count - 1] = value;
 
-    if (count > 1) delete[] tmpPtr;    // освободить память, удалить tmp
+    if (count > 1) delete[] tmpPtr;
+  }
+
+  void push(const T& value) {
+    T* tmpPtr;
+    tmpPtr = stackPtr;
+    stackPtr = new T[count + 1];
+    count++;
+
+    for (int i = 0; i < count - 1; i++) {
+      stackPtr[i] = tmpPtr[i];
+    }
+    stackPtr[count - 1] = value;
+
+    if (count > 1) delete[] tmpPtr;
   }
 
   T pop() {
     if (count == 0)
-      return 0; // стек пуст
+      return 0; 
     count--;
     return stackPtr[count];
   }
